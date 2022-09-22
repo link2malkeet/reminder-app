@@ -1,20 +1,21 @@
-import type { AWS } from '@serverless/typescript';
+import type { AWS } from "@serverless/typescript";
 
-import hello from '@functions/hello';
+import setReminder from "@functions/setReminder";
 
 const serverlessConfiguration: AWS = {
-  service: 'reminder-app',
-  frameworkVersion: '2',
+  service: "reminder-app",
+  frameworkVersion: "2",
   custom: {
     webpack: {
-      webpackConfig: './webpack.config.js',
+      webpackConfig: "./webpack.config.js",
       includeModules: true,
     },
+    reminderTable: "${sls:stage}-reminder-table",
   },
-  plugins: ['serverless-webpack'],
+  plugins: ["serverless-webpack"],
   provider: {
-    name: 'aws',
-    runtime: 'nodejs14.x',
+    name: "aws",
+    runtime: "nodejs14.x",
     profile: "link2malkeet",
     region: "ap-southeast-2",
     apiGateway: {
@@ -22,12 +23,72 @@ const serverlessConfiguration: AWS = {
       shouldStartNameWithService: true,
     },
     environment: {
-      AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+      AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1",
+      REMINDER_TABLE: "${self:custom.reminderTable}",
     },
-    lambdaHashingVersion: '20201221',
+    lambdaHashingVersion: "20201221",
   },
   // import the function via paths
-  functions: { hello },
+  functions: { setReminder },
+  resources: {
+    Resources: {
+      reminderTable: {
+        Type: "AWS::DynamoDB::Table",
+        Properties: {
+          TableName: "${self:custom.reminderTable}",
+          AttributeDefinitions: [
+            {
+              AttributeName: "id",
+              AttributeType: "S",
+            },
+            {
+              AttributeName: "userId",
+              AttributeType: "S",
+            },
+            {
+              AttributeName: "reminderDate",
+              AttributeType: "S",
+            },
+          ],
+          KeySchema: [
+            {
+              AttributeName: "id",
+              KeyType: "HASH",
+            },
+          ],
+          BillingMode: "PAY_PER_REQUEST",
+
+          StreamSpecification: {
+            StreamViewType: "OLD_IMAGE",
+          },
+
+          TimeToLiveSpecification: {
+            AttributeName: "TTL",
+            Enabled: true,
+          },
+
+          GlobalSecondaryIndexes: [
+            {
+              IndexName: "index1",
+              KeySchema: [
+                {
+                  AttributeName: "userId",
+                  KeyType: "HASH",
+                },
+                {
+                  AttributeName: "reminderDate",
+                  KeyType: "RANGE",
+                },
+              ],
+              Projection: {
+                ProjectionType: "ALL",
+              },
+            },
+          ],
+        },
+      },
+    },
+  },
 };
 
 module.exports = serverlessConfiguration;
