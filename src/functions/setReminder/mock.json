@@ -1,0 +1,11 @@
+{
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "body": {
+    "email": "test@gmail.com",
+    "phoneNumber": "0444777888",
+    "reminder": "Docter visit",
+    "reminderDate": "2030-01-01T00:00:00"
+  }
+}
