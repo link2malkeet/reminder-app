@@ -12,7 +12,7 @@ const serverlessConfiguration: AWS = {
     },
     reminderTable: "${sls:stage}-reminder-table",
   },
-  plugins: ["serverless-webpack"],
+  plugins: ["serverless-webpack", "serverless-iam-roles-per-function"],
   provider: {
     name: "aws",
     runtime: "nodejs14.x",

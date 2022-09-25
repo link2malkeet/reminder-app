@@ -11,9 +11,13 @@
     "node": ">=14.15.0"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.172.0",
+    "@aws-sdk/lib-dynamodb": "^3.172.0",
     "@middy/core": "^1.5.2",
     "@middy/http-json-body-parser": "^1.5.2",
-    "source-map-support": "^0.5.19"
+    "serverless-iam-roles-per-function": "^3.2.0",
+    "source-map-support": "^0.5.19",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@serverless/typescript": "^2.23.0",
