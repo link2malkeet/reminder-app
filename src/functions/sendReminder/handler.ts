@@ -3,7 +3,7 @@ import { AttributeValue } from "@aws-sdk/client-dynamodb";
 import { DynamoDBStreamEvent } from "aws-lambda";
 import { middyfy } from "@libs/lambda";
 import "source-map-support/register";
-import { SESRepository } from '../../libs/ses';
+import { SESRepository } from "../../libs/ses";
 
 const sesClient = new SESRepository();
 const setReminder = async (event: DynamoDBStreamEvent) => {
@@ -12,8 +12,8 @@ const setReminder = async (event: DynamoDBStreamEvent) => {
       record.dynamodb.OldImage as Record<string, AttributeValue>
     );
     console.log("data", data);
-    const {email, reminder} = data;
-    await sesClient.send({email, reminder})
+    const { email, reminder } = data;
+    await sesClient.send({ email, reminder });
     console.log("email reminder sent");
   });
 };

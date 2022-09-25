@@ -16,8 +16,8 @@ export default {
   iamRoleStatements: [
     {
       Effect: "Allow",
-        Action: ["ses:sendEmail", "sns:Publish"],
-        Resource: "*",
+      Action: ["ses:sendEmail", "sns:Publish"],
+      Resource: "*",
     },
   ],
 };
