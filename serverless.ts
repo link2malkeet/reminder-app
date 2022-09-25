@@ -1,6 +1,7 @@
 import type { AWS } from "@serverless/typescript";
 
 import setReminder from "@functions/setReminder";
+import sendReminder from "@functions/sendReminder";
 
 const serverlessConfiguration: AWS = {
   service: "reminder-app",
@@ -29,7 +30,7 @@ const serverlessConfiguration: AWS = {
     lambdaHashingVersion: "20201221",
   },
   // import the function via paths
-  functions: { setReminder },
+  functions: { setReminder, sendReminder },
   resources: {
     Resources: {
       reminderTable: {

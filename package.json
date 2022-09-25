@@ -5,6 +5,7 @@
   "main": "serverless.ts",
   "scripts": {
     "deploy": "serverless deploy",
+    "format": "npx prettier --write . ",
     "remove": "serverless remove"
   },
   "engines": {
@@ -12,6 +13,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.172.0",
+    "@aws-sdk/client-ses": "^3.178.0",
     "@aws-sdk/lib-dynamodb": "^3.172.0",
     "@middy/core": "^1.5.2",
     "@middy/http-json-body-parser": "^1.5.2",
