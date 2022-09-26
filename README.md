@@ -22,11 +22,9 @@ Depending on your preferred package manager, follow the instructions below to de
 
 ## Test your service
 
-This template contains a single lambda function triggered by an HTTP request made on the provisioned API Gateway REST API `/hello` route with `POST` method. The request body must be provided as `application/json`. The body structure is tested by API Gateway against `src/functions/hello/schema.ts` JSON-Schema definition: it must contain the `name` property.
-
-- requesting any other path than `/hello` with any other method than `POST` will result in API Gateway returning a `403` HTTP error code
-- sending a `POST` request to `/hello` with a payload **not** containing a string property named `name` will result in API Gateway returning a `400` HTTP error code
-- sending a `POST` request to `/hello` with a payload containing a string property named `name` will result in API Gateway returning a `200` HTTP status code with a message saluting the provided name and the detailed event processed by the lambda
+This template contains a single lambda function triggered by an HTTP request made on the provisioned API Gateway REST API `/` route with `POST` method. The request body must be provided as `application/json`. The body structure is tested by API Gateway against `src/functions/setReminder/schema.ts` JSON-Schema definition: it must contain the `email`, `phoneNumber`, `reminder`, `reminderDate` property.
+- sending a `POST` request to `/` with a payload **not** containing required properties will result in API Gateway returning a `400` HTTP error code
+- sending a `POST` request to `/` with a payload containing required properties will result in API Gateway returning a `200` HTTP status code with a message
 
 > :warning: As is, this template, once deployed, opens a **public** endpoint within your AWS account resources. Anybody with the URL can actively execute the API Gateway endpoint and the corresponding lambda. You should protect this endpoint with the authentication method of your choice.
 
@@ -41,14 +39,17 @@ Check the [sls invoke local command documentation](https://www.serverless.com/fr
 
 ### Remotely
 
-Copy and replace your `url` - found in Serverless `deploy` command output - and `name` parameter in the following `curl` command in your terminal or in Postman to test your newly deployed application.
+Copy and replace your `url` - found in Serverless `deploy` command output - in Postman to test your newly deployed application.
 
 ```
-curl --location --request POST 'https://myApiEndpoint/dev/hello' \
+curl --location --request POST 'https://myApiEndpoint/dev/' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "name": "Frederic"
-}'
+    "email": "myemail@gmail.com",
+    "phoneNumber": "0444777888",
+    "reminder": "Docter visit",
+    "reminderDate": 1664084733
+  }'
 ```
 
 ## Template features
@@ -64,11 +65,11 @@ The project code base is mainly located within the `src` folder. This folder is 
 .
 ├── src
 │   ├── functions               # Lambda configuration and source code folder
-│   │   ├── hello
-│   │   │   ├── handler.ts      # `Hello` lambda source code
-│   │   │   ├── index.ts        # `Hello` lambda Serverless configuration
-│   │   │   ├── mock.json       # `Hello` lambda input parameter, if any, for local invocation
-│   │   │   └── schema.ts       # `Hello` lambda input event JSON-Schema
+│   │   ├── setReminder
+│   │   │   ├── handler.ts      # `setReminder` lambda source code
+│   │   │   ├── index.ts        # `setReminder` lambda Serverless configuration
+│   │   │   ├── mock.json       # `setReminder` lambda input parameter, if any, for local invocation
+│   │   │   └── schema.ts       # `setReminder` lambda input event JSON-Schema
 │   │   │
 │   │   └── index.ts            # Import/export of all lambda configurations
 │   │
@@ -76,6 +77,8 @@ The project code base is mainly located within the `src` folder. This folder is 
 │       └── apiGateway.ts       # API Gateway specific helpers
 │       └── handlerResolver.ts  # Sharable library for resolving lambda handlers
 │       └── lambda.ts           # Lambda middleware
+│       └── ses.ts              # SES middleware
+│       └── sns.ts              # SNS middleware
 │
 ├── package.json
 ├── serverless.ts               # Serverless service file
