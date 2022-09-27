@@ -1,5 +1,9 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { PutCommand, PutCommandInput } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBClient, QueryCommand } from "@aws-sdk/client-dynamodb";
+import {
+  PutCommand,
+  PutCommandInput,
+  QueryCommandInput,
+} from "@aws-sdk/lib-dynamodb";
 
 export default class DBRepository {
   private dynamoClient;
@@ -16,5 +20,17 @@ export default class DBRepository {
     const command = new PutCommand(params);
     await this.dynamoClient.send(command);
     return data;
+  }
+  public async query(value: string) {
+    const params: QueryCommandInput = {
+      TableName: this.tableName,
+      IndexName: "index1",
+      KeyConditionExpression: `userId = :userId`,
+      ExpressionAttributeValues: {
+        ":userId": value,
+      },
+    };
+    const command = new QueryCommand(params);
+    return await this.dynamoClient.query(command);
   }
 }

@@ -23,6 +23,7 @@ Depending on your preferred package manager, follow the instructions below to de
 ## Test your service
 
 This template contains a single lambda function triggered by an HTTP request made on the provisioned API Gateway REST API `/` route with `POST` method. The request body must be provided as `application/json`. The body structure is tested by API Gateway against `src/functions/setReminder/schema.ts` JSON-Schema definition: it must contain the `email`, `phoneNumber`, `reminder`, `reminderDate` property.
+
 - sending a `POST` request to `/` with a payload **not** containing required properties will result in API Gateway returning a `400` HTTP error code
 - sending a `POST` request to `/` with a payload containing required properties will result in API Gateway returning a `200` HTTP status code with a message
 
