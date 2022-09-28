@@ -1,12 +1,13 @@
-import { DynamoDBClient, QueryCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
   PutCommand,
   PutCommandInput,
   QueryCommandInput,
+  QueryCommand
 } from "@aws-sdk/lib-dynamodb";
 
 export default class DBRepository {
-  private dynamoClient;
+  private dynamoClient: DynamoDBClient;
   private tableName;
   constructor(tableName) {
     this.dynamoClient = new DynamoDBClient({});
@@ -31,6 +32,8 @@ export default class DBRepository {
       },
     };
     const command = new QueryCommand(params);
-    return await this.dynamoClient.query(command);
+    const res = await this.dynamoClient.send(command);
+    console.log('res:', res);
+    return res.Items;
   }
 }
